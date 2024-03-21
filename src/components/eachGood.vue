@@ -35,17 +35,17 @@ const prop = defineProps({
 <template>
   <div class="bone">
     <ul class="eachWindow">
-      <li>
+      <li class="vendorName">
         {{bname}}
       </li>
       <li>
-        <img src="@/assets/demo.jpg" alt="..."/>
+        <img :src="img_url" alt="..."/>
       </li>
-      <li>
+      <li class="name">
         {{ productName }}
       </li>
       <li class="tag">
-        <el-tag type="primary" v-for="(item,index) in tag.split(',')" :key="index" >Tag {{item}}</el-tag>
+        <el-tag type="primary" v-for="(item,index) in tag.split(',')" :key="index" >{{item}}</el-tag>
       </li>
       <li>
         ${{price}}
@@ -66,8 +66,6 @@ const prop = defineProps({
 </template>
 
 <style scoped>
-
-
 .bone {
   width: 100%;
   height: 120px;
@@ -83,18 +81,18 @@ const prop = defineProps({
   align-items: center;
 }
 .bone .eachWindow li {
-  width: 100px;
   height: 120px;
   display: flex;
   align-items: center;
 }
-
+.name{
+  width: 200px;
+}
 .tag {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
 }
-
 .eachWindow img {
   width: 100px;
   height: 80px;

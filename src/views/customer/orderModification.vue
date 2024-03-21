@@ -2,26 +2,27 @@
 import {ref, onMounted} from "vue";
 import {getOrderInfo} from "@/api/customerIndex/request.js";
 import {useCustomerStore} from "@/stores/index.js";
+import {delOneTransaction} from "@/api/customerIndex/request.js";
 
 const customerStore = useCustomerStore()
 const page_size = ref(4)
 const current = ref(1)
 const total = ref(0)
-const isEdit = ref(false)
 const orderData = ref([])
 
 onMounted(async () => {
   const d = await getOrderInfo(customerStore.customerId,page_size.value,current.value)
   total.value = d.data.total
   orderData.value = d.data.records
+  orderData.value.forEach(item => {
+    item.isEdit = false
+    item.status === '1' ? item.state = 'Shipped' : item.state = 'Not shipped'
+  })
+  console.log(orderData.value)
 })
 
-const handleEdit = (index, row) => {
-  isEdit.value = !isEdit.value
-  console.log(index, row)
-}
-const handleDelete = (index, row) => {
-  console.log(index, row)
+const handleDelete = async (index, row) => {
+  console.log(index, row.transactionId)
 }
 
 const handleChange = async (value) => {
@@ -44,22 +45,19 @@ const handleChange = async (value) => {
     <el-table-column prop="productName" label="Good Name"/>
     <el-table-column prop="listedPrice" label="Price"/>
     <el-table-column prop="amount" label="Number" width="300px">
-      <div v-if="isEdit">
-        <el-input-number size="small"/>
-        <el-button size="small" @click="isEdit = !isEdit">Finish</el-button>
-      </div>
-    </el-table-column>
-    <el-table-column prop="status" label="Status"/>
-    <el-table-column prop="dateTime" label="Time"/>
-    <el-table-column prop="time" label="Operation">
       <template #default="scope">
-        <el-button size="small" @click="handleEdit(scope.$index, scope)"
-        >Edit
-        </el-button
-        >
+        <el-input-number v-if="scope.row.status === '0'" v-model="scope.row.amount" size="small"/>
+        <el-button size="small" v-if="scope.row.isEdit" >Finish</el-button>
+      </template>
+    </el-table-column>
+    <el-table-column prop="state" label="Status"/>
+    <el-table-column prop="dateTime" label="Time"/>
+    <el-table-column prop="" label="Operation">
+      <template #default="scope">
         <el-button
             size="small"
             type="danger"
+            :disabled="scope.row.status === '1'"
             @click="handleDelete(scope.$index, scope.row)"
         >Delete
         </el-button

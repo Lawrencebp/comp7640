@@ -42,7 +42,6 @@ const add = value => {
   }else {
     value.number = 1
     goodsStore.setCartList(value)
-    console.log(2)
   }
   console.log(goodsStore.cartList,123)
   ElNotification({
@@ -60,7 +59,7 @@ const add = value => {
 <template>
   <each-good v-for="item in goodsData" :key="item.productId"
              :bname="item.businessName"
-             :img_url="item.img_url"
+             :img_url="item.imgUrl"
              :tag="item.tags"
              :price="item.listedPrice"
              :inventory="item.inventory"

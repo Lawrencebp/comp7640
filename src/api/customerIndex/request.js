@@ -28,4 +28,8 @@ export const getOrderInfo = (userId,size=10,current=1) => {
     })
 }
 
+export const delOneTransaction = transactionId => {
+  return request.delete(`/transaction/deleteTransactionById/${transactionId}`)
+}
+
 
