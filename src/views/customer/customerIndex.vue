@@ -174,28 +174,28 @@ const exit = () => {
                 <el-dropdown-menu>
                   <el-checkbox-group v-model="chosenTag" :max="3">
                     <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag1" label="Tag 1" value="1" size="large"/>
+                      <el-checkbox v-model="tagModel.tag1" label="Digital" value="Digital" size="large"/>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag2" label="Tag 2" value="2" size="large"/>
+                      <el-checkbox v-model="tagModel.tag2" label="Food" value="Food" size="large"/>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag3" label="Tag 3" value="3" size="large"/>
+                      <el-checkbox v-model="tagModel.tag3" label="Electric" value="Electric" size="large"/>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag4" label="Tag 4" value="4" size="large"/>
+                      <el-checkbox v-model="tagModel.tag4" label="Phone" value="Phone" size="large"/>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag5" label="Tag 5" value="5" size="large"/>
+                      <el-checkbox v-model="tagModel.tag5" label="Book" value="Book" size="large"/>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag6" label="Tag 6" value="6" size="large"/>
+                      <el-checkbox v-model="tagModel.tag6" label="Make up" value="Makeup" size="large"/>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag7" label="Tag 7" value="7" size="large"/>
+                      <el-checkbox v-model="tagModel.tag7" label="Decoration" value="Decoration" size="large"/>
                     </el-dropdown-item>
                     <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag8" label="Tag 8" value="Tag 8" size="large"/>
+                      <el-checkbox v-model="tagModel.tag8" label="Painting" value="Painting" size="large"/>
                     </el-dropdown-item>
                   </el-checkbox-group>
                 </el-dropdown-menu>
@@ -219,7 +219,7 @@ const exit = () => {
 <style scoped>
 .leftMenu {
   width: 300px;
-  height: 100vh;
+  height: 102vh;
   font-weight: 400;
   font-size: 25px;
 }

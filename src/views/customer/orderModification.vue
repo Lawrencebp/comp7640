@@ -2,7 +2,8 @@
 import {ref, onMounted} from "vue";
 import {getOrderInfo} from "@/api/customerIndex/request.js";
 import {useCustomerStore} from "@/stores/index.js";
-import {delOneTransaction} from "@/api/customerIndex/request.js";
+import {delOneTransaction,updateTransaction} from "@/api/customerIndex/request.js";
+import router from "@/router/index.js";
 
 const customerStore = useCustomerStore()
 const page_size = ref(4)
@@ -22,14 +23,26 @@ onMounted(async () => {
 })
 
 const handleDelete = async (index, row) => {
-  console.log(index, row.transactionId)
+  await delOneTransaction(row.transactionId)
+  router.go(0)
+}
+
+const changeNumber = async value => {
+  await updateTransaction(value.transactionId,value.amount)
+  router.go(0)
 }
 
 const handleChange = async (value) => {
   const d = await getOrderInfo(customerStore.customerId,page_size.value,value)
   total.value = d.data.total
   orderData.value = d.data.records
+  orderData.value.forEach(item => {
+    item.isEdit = false
+    item.status === '1' ? item.state = 'Shipped' : item.state = 'Not shipped'
+  })
 }
+
+
 
 </script>
 
@@ -47,7 +60,7 @@ const handleChange = async (value) => {
     <el-table-column prop="amount" label="Number" width="300px">
       <template #default="scope">
         <el-input-number v-if="scope.row.status === '0'" v-model="scope.row.amount" size="small"/>
-        <el-button size="small" v-if="scope.row.isEdit" >Finish</el-button>
+        <el-button type="primary" @click="changeNumber(scope.row)" size="small" v-if="scope.row.status === '0'" >Change</el-button>
       </template>
     </el-table-column>
     <el-table-column prop="state" label="Status"/>

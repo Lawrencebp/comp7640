@@ -10,17 +10,23 @@ const prop = defineProps({
 </script>
 
 <template>
-    <el-card style="width: 560px;margin:10px">
+    <el-card style="width: 600px;margin:10px">
       <template #header>
         <div class="card-header head">
           <span>BusinessName: {{ businessName }}</span>
           <span>Location: {{ location}}</span>
         </div>
+<!--        <div class="title">-->
+<!--          <div style="width: 200px">Product Name</div>-->
+<!--          <div>Price</div>-->
+<!--          <div>Inventory</div>-->
+<!--          <div>Tags</div>-->
+<!--        </div>-->
       </template>
       <div class="product" v-for="item in productList" :key="item.productId">
-        <div>{{item.productName}}</div>
-        <div>{{item.listedPrice}}</div>
-        <div>{{item.inventory}}</div>
+        <div class="pname">{{item.productName}}</div>
+        <div>Price: {{item.listedPrice}}</div>
+        <div>Inventory: {{item.inventory}}</div>
         <div class="tag">
           <div v-for="(each,index) in item.tags.split(',')" :key="index">
             <el-tag size="small">{{ each }}</el-tag>
@@ -40,12 +46,20 @@ const prop = defineProps({
   width: 100%;
   display: flex;
   justify-content: space-between;
-}
-.product div{
-  width: 70px;
+  margin-bottom: 10px;
 }
 .tag{
   display: flex;
-  justify-content: end;
+  flex-direction: column;
+  justify-content: start;
+}
+.pname{
+  width: 200px;
+}
+.title{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 </style>

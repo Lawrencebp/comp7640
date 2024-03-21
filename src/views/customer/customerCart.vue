@@ -54,7 +54,7 @@ const handleChange = value => {
       <el-button type="danger" @click="delOneGood(obj.productId)">Remove</el-button>
     </template>
   </each-good>
-  <el-pagination background layout="prev, pager, next" :total="total"
+  <el-pagination v-if="goodsStore.cartList.length !== 0" background layout="prev, pager, next" :total="total"
                  :page-size="4" @current-change="handleChange"
   />
   <div class="submit" v-if="goodsStore.cartList.length !== 0">

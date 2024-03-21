@@ -70,6 +70,7 @@ const prop = defineProps({
   width: 100%;
   height: 120px;
   background-color: rgb(242,242,242);
+  padding: 0 10px;
   border-radius: 10px;
   margin-bottom: 40px;
 }
@@ -96,5 +97,8 @@ const prop = defineProps({
 .eachWindow img {
   width: 100px;
   height: 80px;
+}
+.vendorName{
+  width: 20px;
 }
 </style>
