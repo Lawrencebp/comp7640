@@ -23,8 +23,28 @@ const handleChange = async (value) => {
   goodsData.value = data.data.records
 }
 
+const isHave = compareId => {
+  for (let i = 0; i < goodsStore.cartList.length; i++) {
+    if (goodsStore.cartList[i].productId === compareId){
+      return true
+    }
+  }
+  return false
+}
+
 const add = value => {
-  goodsStore.setCartList(value)
+  if (isHave(value.productId)){
+    goodsStore.cartList.forEach(item => {
+      if (item.productId === value.productId){
+        item.number += 1
+      }
+    })
+  }else {
+    value.number = 1
+    goodsStore.setCartList(value)
+    console.log(2)
+  }
+  console.log(goodsStore.cartList,123)
   ElNotification({
     title: 'Success',
     message: 'Successfully added to shopping cart',

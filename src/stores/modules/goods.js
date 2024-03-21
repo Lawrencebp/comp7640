@@ -3,6 +3,7 @@ import {ref} from "vue";
 
 export const useGoodsStore = defineStore('goods',() => {
     const cartList = ref([])
+    const chosenList = ref([])
     const setCartList = value => {
       cartList.value.push(value)
     }
@@ -14,6 +15,7 @@ export const useGoodsStore = defineStore('goods',() => {
     return {
         cartList,
         setCartList,
-        removeCartList
+        removeCartList,
+        chosenList
     }
 })

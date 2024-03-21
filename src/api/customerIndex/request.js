@@ -8,7 +8,6 @@ export const getGoodsLit = (size,current,params=null) => {
         params
     })
 }
-
 export const getVendorsLit = (size,current,params=null) => {
     return request.post('/vendor/getPageVendors',{
         size,
@@ -17,4 +16,16 @@ export const getVendorsLit = (size,current,params=null) => {
         params
     })
 }
+
+export const getOrderInfo = (userId,size=10,current=1) => {
+    return request.post('/transaction/getPageTransactions',{
+        size,
+        current
+    },{
+        params: {
+            userId
+        }
+    })
+}
+
 

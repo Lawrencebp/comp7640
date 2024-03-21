@@ -3,18 +3,7 @@ import eachGood from '@/components/eachGood.vue'
 import {useGoodsStore} from "@/stores/index.js";
 
 const goodsStore = useGoodsStore()
-goodsStore.cartList.forEach(item => {
-  item.number = 1
-  if (!goodsStore.cartList.includes(item)) {
-    item.number = 1
-  } else {
-    console.log(goodsStore.cartList)
-    goodsStore.cartList.splice(goodsStore.cartList.indexOf(item),1)
-    goodsStore.cartList[goodsStore.cartList.indexOf(item)].number += 1
 
-  }
-})
-console.log(goodsStore.cartList)
 
 const delOneGood = delId => {
   goodsStore.cartList = goodsStore.cartList.filter(item => item.productId !== delId)
@@ -23,7 +12,7 @@ const delOneGood = delId => {
 </script>
 
 <template>
-  <div class="warning">
+  <div v-if="goodsStore.cartList.length === 0" class="warning">
     <h1>You have not goods in your cart</h1>
   </div>
   <each-good v-for="item in goodsStore.cartList" :key="item.productId"
@@ -41,7 +30,7 @@ const delOneGood = delId => {
       <el-button type="danger" @click="delOneGood(obj.productId)">Remove</el-button>
     </template>
   </each-good>
-  <div class="submit">
+  <div class="submit" v-if="goodsStore.cartList.length !== 0">
     <el-button type="primary" round>Pay</el-button>
   </div>
 </template>
