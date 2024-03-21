@@ -1,5 +1,7 @@
 <script setup>
+import {ref} from "vue";
 
+const isEdit = ref(false)
 const tableData = [
   {
     goodName:'iphone15',
@@ -31,6 +33,7 @@ const tableData = [
 ]
 
 const handleEdit = (index, row) => {
+  isEdit.value = !isEdit.value
   console.log(index, row)
 }
 const handleDelete = (index, row) => {
@@ -51,9 +54,9 @@ const handleDelete = (index, row) => {
       <el-table-column prop="goodName" label="Good Name"  />
       <el-table-column prop="price" label="Price"  />
       <el-table-column prop="number" label="Number" width="300px">
-        <div v-if="false">
+        <div v-if="isEdit">
           <el-input-number size="small"  />
-          <el-button size="small">Finish</el-button>
+          <el-button size="small" @click="isEdit = !isEdit">Finish</el-button>
         </div>
       </el-table-column>
       <el-table-column prop="state" label="State" />

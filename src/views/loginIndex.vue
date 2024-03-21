@@ -2,12 +2,19 @@
 import {User, Lock} from '@element-plus/icons-vue'
 import {ref} from "vue";
 import router from "@/router/index.js";
+import { customerLoginReq } from "@/api/loginIndexRequest/request.js";
+import { ElMessage } from "element-plus";
+import {useCustomerStore} from "@/stores/index.js";
 
-const isCustomer = ref(true)
+const customerStore = useCustomerStore()
+const isCustomerLogin = ref(true)
+const isVendorLogin = ref(true)
 const customerModel = ref({
   username: '',
-  password: ''
-}) // 消费消费者数据
+  password: '',
+  rePassword: ''
+})
+// 消费消费者数据
 const vendorModel = ref({
   username: '',
   password: ''
@@ -15,54 +22,129 @@ const vendorModel = ref({
 const customer = ref(null)
 const vendor = ref(null)
 
+
 //验证规则
+const validCustomerRePassword = (rule,value,callback ) => {
+  if(value !== customerModel.value.password){
+    callback(new Error('Two inputs are different'))
+  }
+  callback()
+}
+const validVendorRePassword = (rule,value,callback ) => {
+  if(value !== vendorModel.value.password){
+    callback(new Error('Two inputs are different'))
+  }
+  callback()
+}
+const validPassword = (rule,value,callback ) => {
+  if (customerModel.value.repassword !== '' ){
+    if (!customer.value) return
+    customer.value.validateField('rePassword',() => null)
+  }
+  callback()
+}
 const customerRules = ref({
   username: [
-    { required: true, message: 'Please type your customer name', trigger: 'blur' },
-    { min: 8, max: 20, message: 'The length should be between 8-20',trigger: 'blur' },
-    { pattern: /^customer-.*/, message: 'customer name should start with customer-', trigger: 'blur' }
+    {required: true, message: 'Please type your customer name', trigger: 'blur'},
+    {min: 8, max: 20, message: 'The length should be between 8-20', trigger: 'blur'},
+    {pattern: /^customer-.*/, message: 'customer name should start with customer-', trigger: 'blur'}
   ],
-  password:[
-    { required: true, message: 'Please type your password', trigger: 'blur' },
-    { min: 6, max: 20, message: 'The length should be between 8-20',trigger: 'blur' },
+  password: [
+    {required: true, message: 'Please type your password', trigger: 'blur'},
+    {min: 6, max: 20, message: 'The length should be between 8-20', trigger: 'blur'},
+    {
+      validator: validPassword,
+      trigger: 'blur'
+    }
+  ],
+  rePassword: [
+    {required: true, message: 'Please type your password', trigger: 'blur'},
+    {min: 6, max: 20, message: 'The length should be between 8-20', trigger: 'blur'},
+    {validator: validCustomerRePassword ,trigger: "blur"}
   ]
 })
 const vendorRules = ref({
   username: [
-    { required: true, message: 'Please type your vendor name', trigger: 'blur' },
-    { min: 8, max: 20, message: 'The length should be between 8-20',trigger: 'blur' },
-    { pattern: /^vendor-.*/, message: 'customer name should start with vendor-', trigger: 'blur' }
+    {required: true, message: 'Please type your vendor name', trigger: 'blur'},
+    {min: 8, max: 20, message: 'The length should be between 8-20', trigger: 'blur'},
+    {pattern: /^vendor-.*/, message: 'customer name should start with vendor-', trigger: 'blur'}
   ],
-  password:[
-    { required: true, message: 'Please type your password', trigger: 'blur' },
-    { min: 6, max: 20, message: 'The length should be between 8-20',trigger: 'blur' },
+  password: [
+    {required: true, message: 'Please type vendor password', trigger: 'blur'},
+    {min: 6, max: 20, message: 'The length should be between 8-20', trigger: 'blur'},
+  ],
+  rePassword: [
+    {required: true, message: 'Please type vendor password', trigger: 'blur'},
+    {min: 6, max: 20, message: 'The length should be between 8-20', trigger: 'blur'},
+    {validator: validVendorRePassword ,trigger: "blur"}
   ]
 })
 
-// 登陆表单切换
-const toCustomer = () =>{
-  isCustomer.value = true
-  vendor.value.resetFields()
-}
-const toVendor = () => {
-  isCustomer.value = false
+const toCustomerLogin = () => {
+  isCustomerLogin.value = true
   customer.value.resetFields()
 }
+const toCustomerRegister = () => {
+  isCustomerLogin.value = false
+  customer.value.resetFields()
+}
+const toVendorRegister = () => {
+  isVendorLogin.value = false
+  vendor.value.resetFields()
+}
+const toVendorLogin = () => {
+  isVendorLogin.value = true
+  vendor.value.resetFields()
+}
 
-const loginVendor = () => {
+const isSuccess = code => code === 200
+
+
+//Register and login respectively for consumers and vendors
+const vendorLogin = async () => {
   // 模拟登陆并跳转
+  // await vendor.value.validate()
+  // alert('Requesting...')
+  setTimeout(() => {
+    router.push('/vendor/index')
+  }, 2000)
+}
+const vendorRegister = async () => {
+  await vendor.value.validate()
   alert('Requesting...')
   setTimeout(() => {
     router.push('/vendor/index')
-    },2000)
+  }, 2000)
 }
-
-const loginCustomer = () => {
-  // 模拟登陆并跳转
+const customerRegister = async () => {
+  await customer.value.validate()
   alert('Requesting...')
   setTimeout(() => {
-    router.push('/customer/index')
-  },2000)
+    router.push('/vendor/index')
+  }, 2000)
+}
+const customerLogin = async () => {
+  await customer.value.validate()
+  const data = await customerLoginReq(customerModel.value.username,customerModel.value.password)
+  if (!isSuccess(data.code)){
+    ElMessage({
+      message: 'Password wrong',
+      showClose: true,
+      type: 'error',
+      duration:2000
+    })
+    return
+  } else {
+     ElMessage({
+      message: 'Login Success',
+      showClose: true,
+      type: 'success',
+      duration:2000
+    })
+    customerStore.setCustomerId(data.data.userId)
+    await router.push('/customer/index')
+  }
+
 }
 
 </script>
@@ -72,21 +154,24 @@ const loginCustomer = () => {
     <el-col :span="12" class="logo">
       <span class="title">COMP7640 Group Project</span>
       <ul class="member">
-        <li>xxxxxxxxxx 12345678</li>
-        <li>xxxxxxxxxx 12345678</li>
-        <li>xxxxxxxxxx 12345678</li>
-        <li>xxxxxxxxxx 12345678</li>
-        <li>xxxxxxxxxx 12345678</li>
+        <li>23430370&nbsp; Guixian CHEN</li>
+        <li>23459026&nbsp; Jiawei WANG</li>
+        <li>23459034&nbsp; Guohang ZOU</li>
+        <li>23452315&nbsp; Haochen WANG</li>
+        <li>23439416&nbsp; Huiwen HUANG</li>
       </ul>
     </el-col>
     <el-col :span="6" :offset="3" class="form">
-      <el-form ref="customer" size="large" autocomplete="off" v-if="isCustomer" :model="customerModel"
+
+      <!--  Customer: Register and login   -->
+      <el-form ref="customer" size="large" autocomplete="off" v-if="isCustomerLogin"  :model="customerModel"
                :rules="customerRules">
         <el-form-item>
           <h1>Customer</h1>
         </el-form-item>
         <el-form-item prop="username">
-          <el-input :prefix-icon="User" placeholder="Please type your Customer username" v-model="customerModel.username"></el-input>
+          <el-input :prefix-icon="User" placeholder="Please type your Customer username"
+                    v-model="customerModel.username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input
@@ -97,23 +182,62 @@ const loginCustomer = () => {
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="button" type="primary" auto-insert-space @click="loginCustomer">
+          <el-button class="button" type="primary" auto-insert-space @click="customerLogin">
             Login
           </el-button>
         </el-form-item>
         <el-form-item class="flex">
-          <el-link type="info" :underline="false" @click="toVendor">
-            ← Vendor
+          <el-link type="info" :underline="false" @click="toCustomerRegister">
+            ← Register
           </el-link>
         </el-form-item>
       </el-form>
-      <el-form ref="vendor" size="large" autocomplete="off" v-else :model="vendorModel"
-      :rules="vendorRules">
+      <el-form ref="customer" size="large" autocomplete="off" v-else  :model="customerModel"
+               :rules="customerRules">
+        <el-form-item>
+          <h1>Customer</h1>
+        </el-form-item>
+        <el-form-item prop="username">
+          <el-input :prefix-icon="User" placeholder="Please type your Customer username"
+                    v-model="customerModel.username"></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+              :prefix-icon="Lock"
+              type="password"
+              v-model="customerModel.password"
+              placeholder="Please type your password"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="rePassword">
+          <el-input
+              :prefix-icon="Lock"
+              type="password"
+              v-model="customerModel.rePassword"
+              placeholder="Please type your password again"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="button" type="primary" auto-insert-space @click="customerRegister">
+            Register
+          </el-button>
+        </el-form-item>
+        <el-form-item class="flex">
+          <el-link type="info" :underline="false" @click="toCustomerLogin">
+            -> Login
+          </el-link>
+        </el-form-item>
+      </el-form>
+
+      <!--   Vendor: Register and login   -->
+      <el-form ref="vendor" size="large" autocomplete="off" v-if="isVendorLogin"  :model="vendorModel"
+               :rules="vendorRules">
         <el-form-item>
           <h1>Vendor</h1>
         </el-form-item>
         <el-form-item prop="username">
-          <el-input :prefix-icon="User" placeholder="Please type your Vendor username" v-model="vendorModel.username"></el-input>
+          <el-input :prefix-icon="User" placeholder="Please type your Vendor username"
+                    v-model="vendorModel.username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
           <el-input
@@ -125,14 +249,52 @@ const loginCustomer = () => {
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="button" type="primary" auto-insert-space @click="loginVendor"
+          <el-button class="button" type="primary" auto-insert-space @click="vendorLogin"
           >Login
           </el-button
           >
         </el-form-item>
         <el-form-item class="flex">
-          <el-link type="info" :underline="false" @click="toCustomer">
-            Customer →
+          <el-link type="info" :underline="false" @click="toVendorRegister">
+            Register →
+          </el-link>
+        </el-form-item>
+      </el-form>
+      <el-form ref="vendor" size="large" autocomplete="off" v-else  :model="vendorModel"
+               :rules="vendorRules">
+        <el-form-item>
+          <h1>Vendor</h1>
+        </el-form-item>
+        <el-form-item prop="username">
+          <el-input :prefix-icon="User" placeholder="Please type your Vendor username"
+                    v-model="vendorModel.username"></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+              name="password"
+              :prefix-icon="Lock"
+              type="password"
+              v-model="vendorModel.password"
+              placeholder="Please type your password"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="rePassword">
+          <el-input
+              :prefix-icon="Lock"
+              type="password"
+              v-model="vendorModel.rePassword"
+              placeholder="Please type your password again"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="button" type="primary" auto-insert-space @click="vendorRegister"
+          >Register
+          </el-button
+          >
+        </el-form-item>
+        <el-form-item class="flex">
+          <el-link type="info" :underline="false" @click="toVendorLogin">
+            Login →
           </el-link>
         </el-form-item>
       </el-form>
@@ -163,9 +325,9 @@ const loginCustomer = () => {
 }
 
 .logo .member {
-  width: 60%;
+  width: 50%;
   height: 14%;
-  margin: 50px auto 0;
+  margin: 20px auto ;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

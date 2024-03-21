@@ -75,6 +75,12 @@ const exit = () => {
                 </el-icon>
                 <span>Manage goods</span>
               </el-menu-item>
+              <el-menu-item class="item" index="/newGoods">
+                <el-icon>
+                  <setting/>
+                </el-icon>
+                <span>New goods</span>
+              </el-menu-item>
             </el-menu>
           </el-col>
         </el-row>
@@ -113,7 +119,7 @@ const exit = () => {
 
 <style scoped>
 .leftMenu {
-  width: 400px;
+  width: 300px;
   height: 100vh;
   font-weight: 400;
   font-size: 25px;

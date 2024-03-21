@@ -1,4 +1,34 @@
 <script setup>
+const prop = defineProps({
+  bname:{
+    type:String,
+    required:false
+  },
+  productId:{
+    type:Number,
+    required:false
+  },
+  img_url: {
+    type:String,
+    required:false
+  },
+  inventory:{
+    type:Number,
+    required:false
+  },
+  productName:{
+    type:String,
+    required:false
+  },
+  price:{
+    type:Number,
+    required:false
+  },
+  tag:{
+    type:String,
+    required:false
+  }
+})
 
 </script>
 
@@ -6,25 +36,30 @@
   <div class="bone">
     <ul class="eachWindow">
       <li>
-        <slot></slot>
-        Vendor name
+        {{bname}}
       </li>
       <li>
         <img src="@/assets/demo.jpg" alt="..."/>
       </li>
       <li>
-        iphone15
+        {{ productName }}
       </li>
       <li class="tag">
-        <el-tag type="primary">Tag 1</el-tag>
-        <el-tag type="primary">Tag 2</el-tag>
-        <el-tag type="primary">Tag 3</el-tag>
+        <el-tag type="primary" v-for="(item,index) in tag.split(',')" :key="index" >Tag {{item}}</el-tag>
       </li>
       <li>
-        $100
+        ${{price}}
       </li>
       <li>
-        <slot name="number"></slot>
+        <slot name="number">
+          Inventory: {{inventory}}
+        </slot>
+      </li>
+      <li>
+        <slot name="add" :productId="productId" :productName="productName" :img_url="img_url"
+                         :businessName="bname" :listedPrice="price" :inventory="inventory" :tags="tag"
+        ></slot>
+        <slot name="del" :productId="productId"></slot>
       </li>
     </ul>
   </div>
@@ -36,7 +71,6 @@
 .bone {
   width: 100%;
   height: 120px;
-  padding: 0 100px;
   background-color: rgb(242,242,242);
   border-radius: 10px;
   margin-bottom: 40px;
@@ -49,6 +83,7 @@
   align-items: center;
 }
 .bone .eachWindow li {
+  width: 100px;
   height: 120px;
   display: flex;
   align-items: center;
