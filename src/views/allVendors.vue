@@ -3,23 +3,18 @@ import eachVendor from '@/components/eachVendor.vue'
 import {ref, onMounted} from "vue";
 import {useRoute} from "vue-router";
 import {getVendorsLit} from "@/api/customerIndex/request.js";
+import {paginationByEl} from "@/util/myselfFun.js";
 
 const page_size = ref(2)
 const route = useRoute()
 const vendorsData = ref([])
 const total = ref(0)
-onMounted(async () => {
-  const data = await getVendorsLit(page_size.value, 1, route.query)
-  total.value = data.data.total
-  vendorsData.value = data.data.records
+
+onMounted( () => {
+  paginationByEl(getVendorsLit,page_size.value,1,route.query,total,vendorsData)
 })
-
-
-const handleChange = async (value) => {
-  const data = await getVendorsLit(page_size.value, value, route.query)
-  total.value = data.data.total
-  vendorsData.value = data.data.records
-  console.log(data.data.records)
+const handleChange =  (value) => {
+  paginationByEl(getVendorsLit,page_size.value,value,route.query,total,vendorsData)
 }
 </script>
 

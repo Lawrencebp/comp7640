@@ -11,11 +11,12 @@ import {ref} from "vue";
 import router from "@/router/index.js";
 import {useRoute} from "vue-router";
 import {useCustomerStore} from "@/stores/index.js";
+import {useVendorStore} from "@/stores/index.js";
 
 const customerStore = useCustomerStore()
+const vendorStore = useVendorStore()
 const route = useRoute()
 const searchBox = ref('')
-
 const tagModel = ref({
   tag1: false,
   tag2: false,
@@ -26,7 +27,6 @@ const tagModel = ref({
   tag7: false,
   tag8: false,
 })
-
 const chosenTag = ref([])
 const handleOpen = (key, keyPath) => {
   console.log(key, keyPath)
@@ -34,10 +34,8 @@ const handleOpen = (key, keyPath) => {
 const handleClose = (key, keyPath) => {
   console.log(key, keyPath)
 }
-
-
 const sendParams = async () => {
-  if (route.path === '/cusGoods') {
+  if (route.path === '/cusGoods' || route.path === '/goods') {
     await router.push({
       path: '/cusGoods',
       query: {
@@ -46,7 +44,7 @@ const sendParams = async () => {
       }
     })
     router.go(0)
-  } else if (route.path === '/cusVendors') {
+  } else if (route.path === '/cusVendors' || route.path === '/vendors') {
     await router.push({
       path: '/cusVendors',
       query: {
@@ -57,12 +55,13 @@ const sendParams = async () => {
   }
 
 }
-
-const exit = () => {
-  router.push('/')
+const exit = async () => {
   customerStore.removeCustomerId()
+  vendorStore.removeVendorId()
+  await router.push('/')
 }
 
+const needSearchPath = ['/cusGoods','/cusVendors','/goods','/vendors']
 </script>
 
 <template>
@@ -134,12 +133,6 @@ const exit = () => {
                 </el-icon>
                 <span>All vendors</span>
               </el-menu-item>
-              <el-menu-item class="item" index="/introduce">
-                <el-icon>
-                  <document/>
-                </el-icon>
-                <span>New vendor</span>
-              </el-menu-item>
               <el-menu-item class="item" index="/manage">
                 <el-icon>
                   <setting/>
@@ -157,12 +150,13 @@ const exit = () => {
         </el-row>
       </el-aside>
       <el-container>
-        <el-header v-if="route.path === '/cusGoods' || route.path === '/cusVendors'" height="100px">
+        <el-header height="100px"
+                   v-if="needSearchPath.includes(route.path)" >
           <div class="search">
             <el-input v-model="searchBox" style="width: 300px" placeholder="Please input your search" size="large"/>
             <el-button :icon="Search" size="large" @click="sendParams"/>
           </div>
-          <div class="tag" v-if="$route.path === '/cusGoods' || $route.path === '/cart'">
+          <div class="tag" v-if="$route.path === '/cusGoods' || $route.path === '/goods'">
             <el-dropdown :hide-on-click="false" size="large">
               <el-button type="primary">
                 Choose Tag List

@@ -35,7 +35,6 @@ export const updateTransaction = (transactionId, amount) => {
         amount
     })
 }
-
 export const payCurrentOrder = value => {
     return request.post('/transaction/insertBatchTransaction',value)
 }

@@ -1,26 +1,30 @@
 <script setup>
 import eachGood from '@/components/eachGood.vue'
-import {getGoodsLit} from "@/api/customerIndex/request.js";
-import {ref, onMounted} from "vue";
-import {useRoute} from "vue-router";
-import {useGoodsStore} from "@/stores/index.js";
+import { getGoodsLit } from "@/api/customerIndex/request.js";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { useGoodsStore } from "@/stores/index.js";
 import { ElNotification } from 'element-plus'
+import {paginationByEl} from "@/util/myselfFun.js";
 
 const goodsStore = useGoodsStore()
 const route = useRoute()
 const goodsData = ref([])
 const total = ref(0)
+const page_size = ref(4)
 
 onMounted(async () => {
-  const data = await getGoodsLit(4,1,route.query)
-  total.value = data.data.total
-  goodsData.value = data.data.records
+  await paginationByEl(getGoodsLit,page_size.value,1,route.query,total,goodsData)
+  // const data = await getGoodsLit(4,1,route.query)
+  // total.value = data.data.total
+  // goodsData.value = data.data.records
 })
 
 const handleChange = async (value) => {
-  const data = await getGoodsLit(4,value,route.query)
-  total.value = data.data.total
-  goodsData.value = data.data.records
+  await paginationByEl(getGoodsLit,page_size.value,value,route.query,total,goodsData)
+  // const data = await getGoodsLit(4,value,route.query)
+  // total.value = data.data.total
+  // goodsData.value = data.data.records
 }
 
 const isHave = compareId => {

@@ -18,23 +18,19 @@ const router = createRouter({
         },
         {
             path: '/vendor/index',
-            component: () => import('@/views/vendor/layoutIndex.vue'),
+            component: () => import('@/views/customerIndex.vue'),
             redirect: '/goods',
             children: [
                 {
                     path: '/vendors',
-                    component: () => import('@/views/vendor/allVendors.vue')
+                    component: () => import('@/views/allVendors.vue')
                 },
                 {
                     path: '/goods',
-                    component: () => import('@/views/vendor/goodsList.vue')
+                    component: () => import('@/views/goodsList.vue')
                 }, {
                     path: '/manage',
                     component: () => import('@/views/vendor/manageGoods.vue')
-                },
-                {
-                    path: '/introduce',
-                    component: () => import('@/views/vendor/introduceVendor.vue')
                 },
                 {
                     path: '/newGoods',
@@ -44,16 +40,16 @@ const router = createRouter({
         },
         {
             path: '/customer/index',
-            component: () => import('@/views/customer/customerIndex.vue'),
+            component: () => import('@/views/customerIndex.vue'),
             redirect: '/cusGoods',
             children: [
                 {
                     path: '/cusGoods',
-                    component: () => import('@/views/vendor/goodsList.vue'),
+                    component: () => import('@/views/goodsList.vue'),
                 },
                 {
                     path: '/cusVendors',
-                    component: () => import('@/views/vendor/allVendors.vue')
+                    component: () => import('@/views/allVendors.vue')
                 },
                 {
                     path: '/cart',

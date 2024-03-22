@@ -34,24 +34,16 @@ const delOneGood = delId => {
   if (finalList.value.length === 0 && currentPage.value > 0) {
     startPagination(currentPage.value - 1,page_size.value)
   }
-  // const page = pageQueryCartGoods(currentPage.value, page_size.value)
-  // finalList.value = page.records
-  // total.value = page.total
+
 }
 
 onMounted(() => {
   startPagination(currentPage.value,page_size.value)
-  // const page = pageQueryCartGoods(1, page_size.value)
-  // finalList.value = page.records
-  // total.value = page.total
 })
 
 const handleChange = value => {
   currentPage.value = value
   startPagination(currentPage.value,page_size.value)
-  // const page = pageQueryCartGoods(value, page_size.value)
-  // finalList.value = page.records
-  // total.value = page.total
 }
 
 const pay = async () => {

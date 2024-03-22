@@ -399,7 +399,7 @@ const vendorLogin = async () => {
   const data = await vendorLoginReq(vendorModel.value.username, vendorModel.value.password)
   if (!isSuccess(data.code)) {
     ElMessage({
-      message: 'Password wrong',
+      message: data.message,
       showClose: true,
       type: 'error',
       duration: 2000
@@ -412,7 +412,7 @@ const vendorLogin = async () => {
     type: 'success',
     duration: 2000
   })
-  vendorStore.setVendorId(data.data.userId) // stored in memory
+  vendorStore.setVendorId(data.data.vendorId) // stored in memory
   await router.push('/vendor/index')
 
 }
