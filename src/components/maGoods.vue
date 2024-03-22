@@ -2,7 +2,7 @@
 import {ref, watch} from "vue";
 import {ArrowDown} from "@element-plus/icons-vue";
 
-const emit = defineEmits(['modifyName', 'modifyPrice', 'modifyInventory', 'modifyTag'])
+const emit = defineEmits(['modifyName', 'modifyPrice', 'modifyInventory', 'modifyTag','modifyImg'])
 const prop = defineProps({
   imgUrl: {
     type: String,
@@ -34,7 +34,11 @@ const tagList = ref([])
 const price = ref(prop.listedPrice)
 const needChangeInventTory = ref(prop.inventory)
 const changeProductName = ref(prop.productName)
+const imgurl = ref(prop.imgUrl)
 
+const handleImgSuccess = (response) => {
+  emit('modifyImg',{productId: prop.productId,value:"http://" + response.data})
+}
 const sendModifyProductName = value => {
   emit('modifyName', {productId: prop.productId, value})
 }
@@ -59,6 +63,10 @@ watch(() => prop.inventory, newValue => {
   needChangeInventTory.value = newValue
 })
 
+watch(() => prop.imgUrl, newValue => {
+  imgurl.value = newValue
+})
+
 watch(tagList, value => {
   emit('modifyTag', {productId: prop.productId, value})
 })
@@ -71,14 +79,14 @@ watch(tagList, value => {
       <li>
         <slot name="button" :productId="productId"></slot>
       </li>
-      <li>
-        <img :src="imgUrl" alt="..."/>
+      <li style="display: flex;flex-direction: column;justify-content: space-around">
+        <img :src="imgurl" alt="..."/>
         <div>
           <el-upload
               class="upload-demo"
-              action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-              multiple
-              :limit="1"
+              action="http://111.230.95.185/api/file/upload"
+              :show-file-list="false"
+              :on-success="handleImgSuccess"
           >
             <el-button type="primary" size="small">upload</el-button>
           </el-upload>
@@ -129,7 +137,7 @@ watch(tagList, value => {
         </el-dropdown>
       </li>
       <li>
-        <el-input v-model="price" @input="sendModifyPrice" style="width: 100px" placeholder="Modify price"/>
+        <el-input-number size="small" v-model="price" @change="sendModifyPrice" style="width: 120px" placeholder="Modify price"/>
       </li>
       <li>
         <el-input-number @change="sendModifyInventory" v-model="needChangeInventTory" style="width: 200px" :min="1"

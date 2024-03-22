@@ -51,6 +51,14 @@ const changeTag = ({productId,value}) => {
   })
 }
 
+const changeImg = ({productId,value}) => {
+  allData.value.forEach(item => {
+    if (item.productId === productId){
+      item.imgUrl = value
+    }
+  })
+}
+
 const remove =  async (id) => {
   await delOneProduct(id)
   current.value = 1
@@ -77,6 +85,7 @@ const submitChange = async () => {
             @modifyPrice="changePrice"
             @modifyInventory="changeInventory"
             @modifyTag="changeTag"
+            @modifyImg="changeImg"
   >
   <template #button="obj">
     <el-button type="danger" @click="remove(obj.productId)">Remove</el-button>

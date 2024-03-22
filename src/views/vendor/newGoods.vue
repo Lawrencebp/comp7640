@@ -3,6 +3,7 @@ import {ref} from "vue";
 import {useVendorStore} from "@/stores/index.js";
 import {publishNewGood} from "@/api/vendor/request.js";
 import {ElMessage} from "element-plus";
+import { Plus } from '@element-plus/icons-vue'
 
 const vendorStore = useVendorStore()
 const newProductForm = ref(null)
