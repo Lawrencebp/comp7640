@@ -2,8 +2,13 @@
 import {User, Lock, Location} from '@element-plus/icons-vue'
 import {ref, watch} from "vue";
 import router from "@/router/index.js";
-import { vendorRegisterReq, vendorLoginReq, customerLoginReq, customerRegisterReq } from "@/api/loginIndexRequest/request.js";
-import { ElMessage } from "element-plus";
+import {
+  vendorRegisterReq,
+  vendorLoginReq,
+  customerLoginReq,
+  customerRegisterReq
+} from "@/api/loginIndexRequest/request.js";
+import {ElMessage} from "element-plus";
 import {useVendorStore, useCustomerStore} from "@/stores/index.js";
 
 const customerStore = useCustomerStore()
@@ -32,7 +37,7 @@ const vendorRegisterModel = ref({
   businessName: '',
   hkarea: 'HKI',
   hkdistrict: 'HK-WC',
-  address:''
+  address: ''
 })
 
 const customerRegisterModel = ref({
@@ -43,7 +48,7 @@ const customerRegisterModel = ref({
   contactNumber: '',
   hkarea: 'HKI',
   hkdistrict: 'HK-WC',
-  address:''
+  address: ''
 })
 
 const optionValue_2 = ref([
@@ -60,8 +65,8 @@ const optionValue_2 = ref([
     value: "HK-CW"
   },
   {
-    label:'Eastern',
-    value:"HK-EA"
+    label: 'Eastern',
+    value: "HK-EA"
   }
 ])
 watch(() => customerRegisterModel.value.hkarea, newvalue => {
@@ -81,8 +86,8 @@ watch(() => customerRegisterModel.value.hkarea, newvalue => {
         value: "HK-CW"
       },
       {
-        label:'Eastern',
-        value:"HK-EA"
+        label: 'Eastern',
+        value: "HK-EA"
       }
     ]
   } else if (newvalue === 'KL') {
@@ -165,8 +170,8 @@ const optionValue = ref([
     value: "HK-CW"
   },
   {
-    label:'Eastern',
-    value:"HK-EA"
+    label: 'Eastern',
+    value: "HK-EA"
   }
 ])
 watch(() => vendorRegisterModel.value.hkarea, newvalue => {
@@ -186,8 +191,8 @@ watch(() => vendorRegisterModel.value.hkarea, newvalue => {
         value: "HK-CW"
       },
       {
-        label:'Eastern',
-        value:"HK-EA"
+        label: 'Eastern',
+        value: "HK-EA"
       }
     ]
   } else if (newvalue === 'KL') {
@@ -260,22 +265,22 @@ const vendor = ref(null)
 const customerReg = ref(null)
 const vendorReg = ref(null)
 
-const validCustomerRePassword = (rule,value,callback ) => {
-  if(value !== customerRegisterModel.value.password){
+const validCustomerRePassword = (rule, value, callback) => {
+  if (value !== customerRegisterModel.value.password) {
     callback(new Error('Two inputs are different'))
   }
   callback()
 }
-const validVendorRePassword = (rule,value,callback ) => {
-  if(value !== vendorRegisterModel.value.password){
+const validVendorRePassword = (rule, value, callback) => {
+  if (value !== vendorRegisterModel.value.password) {
     callback(new Error('Two inputs are different'))
   }
   callback()
 }
-const validPassword = (rule,value,callback ) => {
-  if (customerModel.value.repassword !== '' ){
+const validPassword = (rule, value, callback) => {
+  if (customerModel.value.repassword !== '') {
     if (!customer.value) return
-    customer.value.validateField('repassword',() => null)
+    customer.value.validateField('repassword', () => null)
   }
   callback()
 }
@@ -308,21 +313,21 @@ const customerRegRules = ref({
   repassword: [
     {required: true, message: 'Please type customer password again', trigger: 'blur'},
     {min: 6, max: 20, message: 'The length should be between 8-20', trigger: 'blur'},
-    {validator: validCustomerRePassword ,trigger: "blur"}
+    {validator: validCustomerRePassword, trigger: "blur"}
   ],
-  nickName:[
+  nickName: [
     {required: true, message: 'Please type nick name', trigger: 'blur'},
   ],
-  contactNumber:[
+  contactNumber: [
     {required: true, message: 'Please type contact number', trigger: 'blur'},
   ],
-  hkarea:[
+  hkarea: [
     {required: true, message: 'Please select', trigger: 'blur'},
   ],
-  hkdistrict:[
+  hkdistrict: [
     {required: true, message: 'Please select your living district', trigger: 'blur'},
   ],
-  address:[
+  address: [
     {required: true, message: 'Please type your living address', trigger: 'blur'},
   ]
 })
@@ -352,25 +357,25 @@ const vendorRegRules = ref({
   repassword: [
     {required: true, message: 'Please type vendor password', trigger: 'blur'},
     {min: 6, max: 20, message: 'The length should be between 8-20', trigger: 'blur'},
-    {validator: validVendorRePassword ,trigger: "blur"}
+    {validator: validVendorRePassword, trigger: "blur"}
   ],
-  businessName:[
+  businessName: [
     {required: true, message: 'Please type business name', trigger: 'blur'},
   ],
-  hkarea:[
+  hkarea: [
     {required: true, message: 'Please select', trigger: 'blur'},
   ],
-  hkdistrict:[
+  hkdistrict: [
     {required: true, message: 'Please select your company district', trigger: 'blur'},
   ],
-  address:[
+  address: [
     {required: true, message: 'Please type your company address', trigger: 'blur'},
   ]
 })
 
 const toCustomerLogin = () => {
   isCustomerLogin.value = true
-  customer.value.resetFields()
+  customerReg.value.resetFields()
 }
 const toCustomerRegister = () => {
   isCustomerLogin.value = false
@@ -391,39 +396,39 @@ const isSuccess = code => code === 200
 //Register and login respectively for consumers and vendors
 const vendorLogin = async () => {
   await vendor.value.validate()
-  const data = await vendorLoginReq(vendorModel.value.username,vendorModel.value.password)
-  if (!isSuccess(data.code)){
+  const data = await vendorLoginReq(vendorModel.value.username, vendorModel.value.password)
+  if (!isSuccess(data.code)) {
     ElMessage({
       message: 'Password wrong',
       showClose: true,
       type: 'error',
-      duration:2000
+      duration: 2000
     })
     return
-  } else {
-     ElMessage({
-      message: 'Login Success',
-      showClose: true,
-      type: 'success',
-      duration:2000
-    })
-    vendorStore.setCustomerId(data.data.userId) // stored in memory
-    await router.push('/vendor/index')
   }
+  ElMessage({
+    message: 'Login Success',
+    showClose: true,
+    type: 'success',
+    duration: 2000
+  })
+  vendorStore.setVendorId(data.data.userId) // stored in memory
+  await router.push('/vendor/index')
+
 }
 
 const vendorRegister = async () => {
   await vendorReg.value.validate();
   // Pass all necessary fields to the vendorRegisterReq function
   const data = await vendorRegisterReq(
-    vendorRegisterModel.value.username,
-    vendorRegisterModel.value.password,
-    vendorRegisterModel.value.businessName,
-    vendorRegisterModel.value.hkarea,
-    vendorRegisterModel.value.hkdistrict,
-    vendorRegisterModel.value.address
+      vendorRegisterModel.value.username,
+      vendorRegisterModel.value.password,
+      vendorRegisterModel.value.businessName,
+      vendorRegisterModel.value.hkarea,
+      vendorRegisterModel.value.hkdistrict,
+      vendorRegisterModel.value.address
   );
-  if (!isSuccess(data.code)){
+  if (!isSuccess(data.code)) {
     ElMessage({
       message: 'Registration failed', // Updated the message to reflect the registration context
       showClose: true,
@@ -432,7 +437,7 @@ const vendorRegister = async () => {
     });
     return;
   } else {
-     ElMessage({
+    ElMessage({
       message: 'Registration successful', // Updated the message to reflect successful registration
       showClose: true,
       type: 'success',
@@ -447,51 +452,53 @@ const customerRegister = async () => {
   await customerReg.value.validate();
   // Pass all necessary fields to the vendorRegisterReq function
   const data = await customerRegisterReq(
-    customerRegisterModel.value.username,
-    customerRegisterModel.value.password,
-    customerRegisterModel.value.nickName,
-    customerRegisterModel.value.contactNumber,
-    customerRegisterModel.value.hkarea,
-    customerRegisterModel.value.hkdistrict,
-    customerRegisterModel.value.address
+      customerRegisterModel.value.username,
+      customerRegisterModel.value.password,
+      customerRegisterModel.value.nickName,
+      customerRegisterModel.value.contactNumber,
+      customerRegisterModel.value.hkarea,
+      customerRegisterModel.value.hkdistrict,
+      customerRegisterModel.value.address
   );
-  if (!isSuccess(data.code)){
+  console.log(data)
+  if (!isSuccess(data.code)) {
     ElMessage({
       message: 'Registration failed', // Updated the message to reflect the registration context
       showClose: true,
       type: 'error',
       duration: 2000
     });
-    return;
-  } else {
-     ElMessage({
-      message: 'Registration successful', // Updated the message to reflect successful registration
-      showClose: true,
-      type: 'success',
-      duration: 2000
-    });
-    vendorStore.setCustomerId(data.data.userId); // Stored in memory
-    await router.push('/vendor/index');
+    return
   }
+  ElMessage({
+    message: 'Registration successful', // Updated the message to reflect successful registration
+    showClose: true,
+    type: 'success',
+    duration: 2000
+  });
+
+  // vendorStore.setVendorId(data.data.userId); // Stored in memory
+  // await router.push('/vendor/index');
+
 }
 
 const customerLogin = async () => {
   await customer.value.validate()
-  const data = await customerLoginReq(customerModel.value.username,customerModel.value.password)
-  if (!isSuccess(data.code)){
+  const data = await customerLoginReq(customerModel.value.username, customerModel.value.password)
+  if (!isSuccess(data.code)) {
     ElMessage({
       message: 'Password wrong',
       showClose: true,
       type: 'error',
-      duration:2000
+      duration: 2000
     })
     return
   } else {
-     ElMessage({
+    ElMessage({
       message: 'Login Success',
       showClose: true,
       type: 'success',
-      duration:2000
+      duration: 2000
     })
     customerStore.setCustomerId(data.data.userId)
     await router.push('/customer/index')
@@ -515,7 +522,7 @@ const customerLogin = async () => {
     <el-col :span="6" :offset="3" class="form">
 
       <!--  Customer: Register and login   -->
-      <el-form ref="customer" size="large" autocomplete="off" v-if="isCustomerLogin"  :model="customerModel"
+      <el-form ref="customer" size="large" autocomplete="off" v-if="isCustomerLogin" :model="customerModel"
                :rules="customerRules">
         <el-form-item>
           <h1>Customer</h1>
@@ -544,12 +551,14 @@ const customerLogin = async () => {
         </el-form-item>
       </el-form>
 
-      <el-form ref="customerReg" size="large" autocomplete="off" v-else  :model="customerRegisterModel" :rules="customerRegRules">
+      <el-form ref="customerReg" size="large" autocomplete="off" v-else :model="customerRegisterModel"
+               :rules="customerRegRules">
         <el-form-item>
           <h1>New Customer Register</h1>
         </el-form-item>
         <el-form-item label="" prop="username">
-          <el-input :prefix-icon="User" placeholder="Please type your customer username" v-model="customerRegisterModel.username"></el-input>
+          <el-input :prefix-icon="User" placeholder="Please type your customer username"
+                    v-model="customerRegisterModel.username"></el-input>
         </el-form-item>
         <el-form-item label="" prop="password">
           <el-input
@@ -569,11 +578,13 @@ const customerLogin = async () => {
               placeholder="Please type your password AGAIN"
           ></el-input>
         </el-form-item>
-        <el-form-item label="" prop="businessName">
-          <el-input :prefix-icon="User" placeholder="Please type your nick name" v-model="customerRegisterModel.nickName"></el-input>
+        <el-form-item label="" prop="nickName">
+          <el-input :prefix-icon="User" placeholder="Please type your nick name"
+                    v-model="customerRegisterModel.nickName"></el-input>
         </el-form-item>
         <el-form-item label="" prop="contactNumber">
-          <el-input :prefix-icon="User" placeholder="Please type your contact number" v-model="customerRegisterModel.contactNumber"></el-input>
+          <el-input :prefix-icon="User" placeholder="Please type your contact number"
+                    v-model="customerRegisterModel.contactNumber"></el-input>
         </el-form-item>
         <!-- Area -->
         <el-form-item label="Area" prop="hkarea">
@@ -610,8 +621,9 @@ const customerLogin = async () => {
           </el-link>
         </el-form-item>
       </el-form>
+
       <!--   Vendor: Register and login   -->
-      <el-form ref="vendor" size="large" autocomplete="off" v-if="isVendorLogin"  :model="vendorModel"
+      <el-form ref="vendor" size="large" autocomplete="off" v-if="isVendorLogin" :model="vendorModel"
                :rules="vendorRules">
         <el-form-item>
           <h1>Vendor</h1>
@@ -641,12 +653,14 @@ const customerLogin = async () => {
           </el-link>
         </el-form-item>
       </el-form>
-      <el-form ref="vendorReg" size="large" autocomplete="off" v-else  :model="vendorRegisterModel" :rules="vendorRegRules">
+      <el-form ref="vendorReg" size="large" autocomplete="off" v-else :model="vendorRegisterModel"
+               :rules="vendorRegRules">
         <el-form-item>
           <h1>Introduce New Vendor</h1>
         </el-form-item>
         <el-form-item label="" prop="username">
-          <el-input :prefix-icon="User" placeholder="Please type your vendor username" v-model="vendorRegisterModel.username"></el-input>
+          <el-input :prefix-icon="User" placeholder="Please type your vendor username"
+                    v-model="vendorRegisterModel.username"></el-input>
         </el-form-item>
         <el-form-item label="" prop="password">
           <el-input
@@ -667,7 +681,8 @@ const customerLogin = async () => {
           ></el-input>
         </el-form-item>
         <el-form-item label="" prop="businessName">
-          <el-input :prefix-icon="User" placeholder="Please type your Business Name" v-model="vendorRegisterModel.businessName"></el-input>
+          <el-input :prefix-icon="User" placeholder="Please type your Business Name"
+                    v-model="vendorRegisterModel.businessName"></el-input>
         </el-form-item>
         <!-- Area -->
         <el-form-item label="Area" prop="hkarea">
@@ -733,7 +748,7 @@ const customerLogin = async () => {
 .logo .member {
   width: 50%;
   height: 14%;
-  margin: 20px auto ;
+  margin: 20px auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

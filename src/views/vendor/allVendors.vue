@@ -32,7 +32,7 @@ const handleChange = async (value) => {
                  :location="item.geographicalPresence"
     ></each-vendor>
   </div>
-  <div style="width: 100%;padding: 0 100px">
+  <div style="width: 100%;">
     <el-pagination v-if="vendorsData.length !== 0" background layout="prev, pager, next" :total="total"
                    :page-size="page_size" @current-change="handleChange"
     />
@@ -44,8 +44,8 @@ const handleChange = async (value) => {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: start;
   margin-bottom: 20px;
-  padding: 0 100px;
+  //padding: 0 50px;
 }
 </style>

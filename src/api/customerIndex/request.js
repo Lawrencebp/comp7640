@@ -29,12 +29,15 @@ export const getOrderInfo = (userId, size = 10, current = 1) => {
 export const delOneTransaction = transactionId => {
     return request.delete(`/transaction/deleteTransactionById/${transactionId}`)
 }
-
 export const updateTransaction = (transactionId, amount) => {
     return request.put('/transaction/updateTransaction', {
         transactionId,
         amount
     })
+}
+
+export const payCurrentOrder = value => {
+    return request.post('/transaction/insertBatchTransaction',value)
 }
 
 

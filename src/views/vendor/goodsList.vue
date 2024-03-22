@@ -43,7 +43,6 @@ const add = value => {
     value.number = 1
     goodsStore.setCartList(value)
   }
-  console.log(goodsStore.cartList,123)
   ElNotification({
     title: 'Success',
     message: 'Successfully added to shopping cart',
@@ -52,7 +51,6 @@ const add = value => {
     duration:1500
   })
 }
-
 
 </script>
 
@@ -67,7 +65,7 @@ const add = value => {
              :productId="item.productId"
   >
     <template #add="obj" v-if="route.path !== '/goods'">
-      <el-button type="primary" @click="add(obj)">Add</el-button>
+      <el-button type="primary" @click="add(obj)" :disabled="item.inventory <= 0">Add</el-button>
     </template>
   </each-good>
   <el-pagination background layout="prev, pager, next" :total="total"

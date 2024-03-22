@@ -72,7 +72,7 @@ const prop = defineProps({
   background-color: rgb(242,242,242);
   padding: 0 10px;
   border-radius: 10px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .bone .eachWindow {

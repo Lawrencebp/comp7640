@@ -27,16 +27,16 @@ export const vendorRegisterReq = (username, password, businessName, hkarea, hkdi
   });
 }
 
-export const customerRegisterReq = (username, password, nickName, contactNumber, hkarea, hkdistrict, address) => {
+export const customerRegisterReq = (userName, password, nickName, contactNumber, hkarea, hkdistrict, address) => {
   // Concatenating address, district, and area
-  const geographicalPresence = `${address}, ${hkdistrict}, ${hkarea}`;
+  const shippingDetails = `${address}, ${hkdistrict}, ${hkarea}`;
 
   // Sending the request to the backend API
   return request.post('/user/registerUser', {
-    username,
+    userName,
     password,
     nickName,
     contactNumber,
-    geographicalPresence
+    shippingDetails
   });
 }

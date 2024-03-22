@@ -9,7 +9,7 @@ const options = {
 }
 
 const request = axios.create({
-    baseURL: 'http://111.230.95.185/',
+    baseURL: 'http://111.230.95.185/api',
     timeout: 3000,
 });
 
