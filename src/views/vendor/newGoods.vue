@@ -43,6 +43,11 @@ const submitProductData = async () => {
   })
 }
 
+const handleImgSuccess = (response) => {
+  console.log("handleImgSuccess", response);
+  newProductModel.value.imgUrl = "http://" + response.data;
+}
+
 </script>
 
 <template>
@@ -64,6 +69,18 @@ const submitProductData = async () => {
       </el-form-item>
       <el-form-item label="Inventory">
         <el-input-number v-model="newProductModel.inventory" :min="10" :precision="0"/>
+      </el-form-item>
+      <el-form-item label="Image">
+        <el-upload
+          v-model="newProductModel.imgUrl"
+          class="avatar-uploader"
+          action="http://111.230.95.185/api/file/upload"
+          :show-file-list="false"
+          :on-success="handleImgSuccess"
+        >
+          <img v-if="newProductModel.imgUrl" :src="newProductModel.imgUrl" class="avatar" />
+          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+        </el-upload>
       </el-form-item>
       <el-form-item label="Tag" prop="name">
         <el-checkbox-group v-model="newProductModel.tags" :max="3">
@@ -106,6 +123,37 @@ const submitProductData = async () => {
     </el-form>
   </div>
 </template>
+
+<style scoped>
+.avatar-uploader .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+</style>
+
+<style>
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
+}
+</style>
 
 <style scoped>
 .bone {
