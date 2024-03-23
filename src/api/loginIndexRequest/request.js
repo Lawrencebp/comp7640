@@ -14,13 +14,13 @@ export const vendorLoginReq = (vendorName, password) => {
     })
 }
 
-export const vendorRegisterReq = (username, password, businessName, hkarea, hkdistrict, address) => {
+export const vendorRegisterReq = (vendorName, password, businessName, hkarea, hkdistrict, address) => {
     // Concatenating address, district, and area
     const geographicalPresence = `${address}, ${hkdistrict}, ${hkarea}`;
 
     // Sending the request to the backend API
     return request.post('/vendor/registerVendor', {
-        username,
+        vendorName,
         password,
         businessName,
         geographicalPresence

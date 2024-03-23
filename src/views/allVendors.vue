@@ -10,11 +10,13 @@ const route = useRoute()
 const vendorsData = ref([])
 const total = ref(0)
 
-onMounted( () => {
-  paginationByEl(getVendorsLit,page_size.value,1,route.query,total,vendorsData)
+onMounted( async () => {
+  await paginationByEl(getVendorsLit,page_size.value,1,route.query,total,vendorsData)
+  console.log(vendorsData.value)
 })
-const handleChange =  (value) => {
-  paginationByEl(getVendorsLit,page_size.value,value,route.query,total,vendorsData)
+const handleChange = async (value) => {
+  await paginationByEl(getVendorsLit,page_size.value,value,route.query,total,vendorsData)
+  console.log(vendorsData.value)
 }
 </script>
 
@@ -40,7 +42,7 @@ const handleChange =  (value) => {
   display: flex;
   flex-wrap: wrap;
   justify-content: start;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   //padding: 0 50px;
 }
 </style>
