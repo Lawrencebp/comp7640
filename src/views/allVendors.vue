@@ -12,11 +12,9 @@ const total = ref(0)
 
 onMounted( async () => {
   await paginationByEl(getVendorsLit,page_size.value,1,route.query,total,vendorsData)
-  console.log(vendorsData.value)
 })
 const handleChange = async (value) => {
   await paginationByEl(getVendorsLit,page_size.value,value,route.query,total,vendorsData)
-  console.log(vendorsData.value)
 }
 </script>
 

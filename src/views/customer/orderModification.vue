@@ -1,8 +1,7 @@
 <script setup>
 import {ref, onMounted} from "vue";
-import {getOrderInfo} from "@/api/customerIndex/request.js";
 import {useCustomerStore} from "@/stores/index.js";
-import {delOneTransaction,updateTransaction} from "@/api/customerIndex/request.js";
+import {delOneTransaction,updateTransaction,getOrderInfo} from "@/api/customerIndex/request.js";
 import router from "@/router/index.js";
 import {ElMessage} from "element-plus";
 
@@ -31,10 +30,22 @@ onMounted(async () => {
   total.value = d.data.total
   orderData.value = d.data.records
   dataClean()
+  orderData.value.forEach(item => {
+    console.log(item)
+  })
 })
 const handleDelete = async (index, row) => {
   await delOneTransaction(row.transactionId)
-  router.go(0)
+  ElMessage({
+    showClose: true,
+    message: 'Delete successfully',
+    type: 'success',
+    duration:2000
+  })
+  setTimeout(() => {
+    router.go(0)
+  },2100)
+
 }
 const changeNumber = async value => {
   const res = await updateTransaction(value.transactionId,value.amount)
@@ -42,10 +53,18 @@ const changeNumber = async value => {
     ElMessage({
       message: res.message,
       type: 'error',
-      duration:2000
+      duration:1000
     })
   }else {
-    router.go(0)
+     ElMessage({
+      showClose: true,
+      message: 'Update message successfully',
+      type: 'success',
+      duration: 1000
+    })
+    setTimeout(() => {
+      router.go(0)
+    },1100)
   }
 
 }
@@ -58,7 +77,6 @@ const handleChange = async (value) => {
 const test = value => {
   value.isChange = true
 }
-
 
 </script>
 
@@ -76,9 +94,6 @@ const test = value => {
     <el-table-column prop="amount" label="Number" width="200px">
       <template #default="scope">
         <el-input-number :min="1" v-if="scope.row.status === '0'" v-model="scope.row.amount" size="small" @change="test(scope.row)"/>
-        <el-button type="primary" @click="changeNumber(scope.row)" size="small" v-if="scope.row.status === '0'"
-                   :disabled="!scope.row.isChange"
-        >Change</el-button>
       </template>
     </el-table-column>
     <el-table-column prop="state" label="Status"/>
@@ -91,8 +106,10 @@ const test = value => {
             :disabled="scope.row.status === '1'"
             @click="handleDelete(scope.$index, scope.row)"
         >Delete
-        </el-button
-        >
+        </el-button>
+        <el-button type="primary" @click="changeNumber(scope.row)" size="small" v-if="scope.row.status === '0'"
+                   :disabled="!scope.row.isChange"
+        >Change</el-button>
       </template>
     </el-table-column>
   </el-table>

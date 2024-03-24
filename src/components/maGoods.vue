@@ -76,9 +76,6 @@ watch(tagList, value => {
 <template>
   <div class="bone">
     <ul class="eachWindow">
-      <li>
-        <slot name="button" :productId="productId"></slot>
-      </li>
       <li style="display: flex;flex-direction: column;justify-content: space-around">
         <img :src="imgurl" alt="..."/>
         <div>
@@ -93,8 +90,10 @@ watch(tagList, value => {
         </div>
       </li>
       <li>
-        <el-input @input="sendModifyProductName" v-model="changeProductName" style="width: 400px"
-                  placeholder="Change product name"/>
+        <el-input @input="sendModifyProductName" v-model="changeProductName"
+                  placeholder="Change product name" type="textarea" maxlength="20" style="width: 240px"
+                  show-word-limit autosize
+        />
       </li>
       <li class="tag">
         <el-dropdown :hide-on-click="false" size="large">
@@ -136,12 +135,17 @@ watch(tagList, value => {
           </template>
         </el-dropdown>
       </li>
-      <li>
+      <li style="display: flex;flex-direction: column;justify-content: center">
+        <span>Price</span>
         <el-input-number size="small" v-model="price" @change="sendModifyPrice" style="width: 120px" placeholder="Modify price"/>
       </li>
-      <li>
+      <li style="display: flex;flex-direction: column;justify-content: center">
+        <span>Inventory</span>
         <el-input-number @change="sendModifyInventory" v-model="needChangeInventTory" style="width: 200px" :min="1"
                          size="large" placeholder="Modify Inventory"/>
+      </li>
+      <li>
+        <slot name="button" :productId="productId"></slot>
       </li>
     </ul>
 

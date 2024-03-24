@@ -7,23 +7,32 @@ import { Plus } from '@element-plus/icons-vue'
 
 const vendorStore = useVendorStore()
 const newProductForm = ref(null)
+
 const rules = ref({
   productName: [
-    {required: true, message: 'You must type product name', trigger: 'blur'},
-    {min: 5, max: 20, message: 'The length of product name must be 5 - 20', trigger: 'blur'}
+    { required: true, message: 'You must type product name', trigger: 'blur' },
+    { min: 5, max: 20, message: 'The length of product name must be 5 - 20', trigger: 'blur' }
+  ],
+  fakeTags: [
+    { required:true, message:'You must choose tags', trigger:'change'},
   ]
 })
 const newProductModel = ref({
   productName: '',
   listedPrice: 0,
   inventory: 1,
-  tags: [],
+  fakeTags: [],
   vendorId:vendorStore.vendorId,
   imgUrl:null
 })
 
 const submitProductData = async () => {
-  newProductModel.value.tags = newProductModel.value.tags.join(',')
+  try{
+    await newProductForm.value.validate()
+  } catch (e){
+    return
+  }
+  newProductModel.value.tags = newProductModel.value.fakeTags.join(',')
   const res = await publishNewGood(newProductModel.value)
   if (res.code === 200){
     ElMessage({
@@ -45,7 +54,6 @@ const submitProductData = async () => {
 }
 
 const handleImgSuccess = (response) => {
-  console.log("handleImgSuccess", response);
   newProductModel.value.imgUrl = "http://" + response.data;
 }
 
@@ -83,8 +91,8 @@ const handleImgSuccess = (response) => {
           <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
         </el-upload>
       </el-form-item>
-      <el-form-item label="Tag" prop="name">
-        <el-checkbox-group v-model="newProductModel.tags" :max="3">
+      <el-form-item label="Tag" prop="fakeTags">
+        <el-checkbox-group v-model="newProductModel.fakeTags" :max="3">
           <ul class="checkBoxGroup">
             <li>
               <el-checkbox label="Digital" value="Digital" size="large"/>

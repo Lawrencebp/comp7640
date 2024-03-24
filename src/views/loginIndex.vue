@@ -413,6 +413,7 @@ const vendorLogin = async () => {
     duration: 2000
   })
   vendorStore.setVendorId(data.data.vendorId) // stored in memory
+  vendorStore.setVendorBusinessName(data.data.businessName)
   await router.push('/vendor/index')
 
 }
@@ -460,7 +461,6 @@ const customerRegister = async () => {
       customerRegisterModel.value.hkdistrict,
       customerRegisterModel.value.address
   );
-  console.log(data)
   if (!isSuccess(data.code)) {
     ElMessage({
       message: 'Registration failed', // Updated the message to reflect the registration context
@@ -476,9 +476,6 @@ const customerRegister = async () => {
     type: 'success',
     duration: 2000
   });
-
-  // vendorStore.setVendorId(data.data.userId); // Stored in memory
-  // await router.push('/vendor/index');
 
 }
 
@@ -501,6 +498,7 @@ const customerLogin = async () => {
       duration: 2000
     })
     customerStore.setCustomerId(data.data.userId)
+    customerStore.setCustomerNickName(data.data.nickName)
     await router.push('/customer/index')
   }
 }

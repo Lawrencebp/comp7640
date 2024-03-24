@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
 
-export const useVendorStore = defineStore('vendor',() => {
+export const useVendorStore = defineStore('vendor', () => {
     const vendorId = ref('')
     const vendorName = ref('')
     const password = ref('')
@@ -11,20 +11,29 @@ export const useVendorStore = defineStore('vendor',() => {
     const setVendorId = id => {
         vendorId.value = id
     }
-
     const removeVendorId = () => {
         vendorId.value = ''
     }
 
-    return {
-      vendorId,
-      vendorName,
-      password,
-      businessName,
-      geographicalPresence,
-      setVendorId,
-      removeVendorId
+    const setVendorBusinessName = nick => {
+        businessName.value = nick
     }
-},{
-    persist:true
+
+    const removeVendorBusinessName = () => {
+        vendorId.value = ''
+    }
+
+    return {
+        vendorId,
+        vendorName,
+        password,
+        businessName,
+        geographicalPresence,
+        setVendorId,
+        removeVendorId,
+        setVendorBusinessName,
+        removeVendorBusinessName
+    }
+}, {
+    persist: true
 })

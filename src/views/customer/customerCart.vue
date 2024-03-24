@@ -4,6 +4,7 @@ import {useGoodsStore, useCustomerStore} from "@/stores/index.js";
 import {ref, onMounted} from "vue";
 import {payCurrentOrder} from "@/api/customerIndex/request.js";
 import router from "@/router/index.js";
+import {ElMessage} from "element-plus";
 
 const goodsStore = useGoodsStore()
 const customerStore = useCustomerStore()
@@ -54,8 +55,24 @@ const pay = async () => {
       amount
     }
   })
-  await payCurrentOrder(submitData)
-  await router.go(0)
+  const res = await payCurrentOrder(submitData)
+  if (res.code !== 200){
+    ElMessage({
+      message: res.message,
+      type: 'error',
+      duration:1000
+    })
+  }else {
+    ElMessage({
+      showClose: true,
+      message: 'Pay successfully',
+      type: 'success',
+      duration: 1000
+    })
+    setTimeout(() => {
+      router.go(0)
+    },1100)
+  }
 }
 
 
@@ -63,7 +80,7 @@ const pay = async () => {
 
 <template>
   <div v-if="finalList.length === 0" class="warning">
-    <h1>You have not goods in your cart</h1>
+    <el-empty description="You have not goods in your cart" />
   </div>
   <each-good v-for="item in finalList" :key="item.productId"
              :bname="item.businessName"

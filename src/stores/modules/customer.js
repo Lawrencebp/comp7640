@@ -16,6 +16,14 @@ export const useCustomerStore = defineStore('customer',() => {
         customerId.value = ''
     }
 
+    const setCustomerNickName = nickName => {
+        customerNickName.value = nickName
+    }
+
+    const removeCustomerNickname = () => {
+        customerId.value = ''
+    }
+
     return {
         customerId,
         customerNickName,
@@ -24,6 +32,8 @@ export const useCustomerStore = defineStore('customer',() => {
         customerName,
         setCustomerId,
         removeCustomerId,
+        setCustomerNickName,
+        removeCustomerNickname
     }
 },{
     persist:true

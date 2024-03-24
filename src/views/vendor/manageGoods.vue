@@ -5,6 +5,7 @@ import {getOneVendorProduct,updateGoodsInfo,delOneProduct} from "@/api/vendor/re
 import {paginationByEl} from "@/util/myselfFun.js";
 import {useVendorStore} from "@/stores/index.js";
 import router from "@/router/index.js";
+import {ElMessage} from "element-plus";
 const vendorStore = useVendorStore()
 const allData = ref([])
 const page_size = ref(4)
@@ -60,20 +61,56 @@ const changeImg = ({productId,value}) => {
 }
 
 const remove =  async (id) => {
-  await delOneProduct(id)
+  const res = await delOneProduct(id)
+  if (res.code !== 200){
+    ElMessage({
+      message: res.message,
+      type: 'error',
+      duration:1000
+    })
+  }else {
+    ElMessage({
+      showClose: true,
+      message: 'Delete good successfully',
+      type: 'success',
+      duration: 1000
+    })
+  }
   current.value = 1
   await paginationByEl(getOneVendorProduct,page_size.value,1,{vendorId:vendorStore.vendorId},total,allData)
-  router.go(0)
+  setTimeout(() => {
+    router.go(0)
+  },1100)
 }
 
 const submitChange = async () => {
   const res = await updateGoodsInfo(allData.value)
+  if (res.code !== 200){
+    ElMessage({
+      message: res.message,
+      type: 'error',
+      duration:1000
+    })
+  }else {
+    ElMessage({
+      showClose: true,
+      message: 'Change successfully',
+      type: 'success',
+      duration: 1000
+    })
+  }
   await paginationByEl(getOneVendorProduct,page_size.value,1,{vendorId:vendorStore.vendorId},total,allData)
+  setTimeout(() => {
+    router.go(0)
+  },1100)
 }
 
 </script>
 
 <template>
+  <div v-if="allData.length === 0" class="warning">
+    <el-empty description="There are no products in your store yet" />
+  </div>
   <ma-goods v-for="item in allData" :key="item.productId"
             :imgUrl="item.imgUrl"
             :inventory="item.inventory"
@@ -95,7 +132,7 @@ const submitChange = async () => {
                  :page-size="page_size" @current-change="handleChange"
   />
   <div class="submit">
-    <el-button type="primary" round @click="submitChange">Change</el-button>
+    <el-button v-if="allData.length !== 0" type="primary" round @click="submitChange">Change</el-button>
   </div>
 
 </template>

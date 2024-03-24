@@ -28,19 +28,13 @@ const tagModel = ref({
   tag8: false,
 })
 const chosenTag = ref([])
-const handleOpen = (key, keyPath) => {
-  console.log(key, keyPath)
-}
-const handleClose = (key, keyPath) => {
-  console.log(key, keyPath)
-}
 const sendParams = async () => {
   if (route.path === '/cusGoods' || route.path === '/goods') {
     await router.push({
       path: '/cusGoods',
       query: {
         productName: searchBox.value,
-        tags:chosenTag.value.join(',')
+        tags: chosenTag.value.join(',')
       }
     })
     router.go(0)
@@ -57,11 +51,13 @@ const sendParams = async () => {
 }
 const exit = async () => {
   customerStore.removeCustomerId()
+  customerStore.removeCustomerNickname()
   vendorStore.removeVendorId()
+  vendorStore.removeVendorBusinessName()
   await router.push('/')
 }
 
-const needSearchPath = ['/cusGoods','/cusVendors','/goods','/vendors']
+const needSearchPath = ['/cusGoods', '/cusVendors', '/goods', '/vendors']
 </script>
 
 <template>
@@ -76,8 +72,6 @@ const needSearchPath = ['/cusGoods','/cusVendors','/goods','/vendors']
                 class="el-menu-vertical"
                 :default-active="$route.path"
                 text-color="#fff"
-                @open="handleOpen"
-                @close="handleClose"
                 router
             >
               <h3 style="color: #fff;text-align: center">Customer</h3>
@@ -116,8 +110,6 @@ const needSearchPath = ['/cusGoods','/cusVendors','/goods','/vendors']
                 class="el-menu-vertical"
                 :default-active="$route.path"
                 text-color="#fff"
-                @open="handleOpen"
-                @close="handleClose"
                 router
             >
               <h3 style="color: #fff;text-align: center">Vendor</h3>
@@ -151,50 +143,58 @@ const needSearchPath = ['/cusGoods','/cusVendors','/goods','/vendors']
       </el-aside>
       <el-container>
         <el-header height="100px"
-                   v-if="needSearchPath.includes(route.path)" >
-          <div class="search">
-            <el-input v-model="searchBox" style="width: 300px" placeholder="Please input your search" size="large"/>
-            <el-button :icon="Search" size="large" @click="sendParams"/>
-          </div>
-          <div class="tag" v-if="$route.path === '/cusGoods' || $route.path === '/goods'">
-            <el-dropdown :hide-on-click="false" size="large">
-              <el-button type="primary">
-                Choose Tag List
-                <el-icon class="el-icon--right">
-                  <arrow-down/>
-                </el-icon>
-              </el-button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-checkbox-group v-model="chosenTag" :max="3">
-                    <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag1" label="Digital" value="Digital" size="large"/>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag2" label="Food" value="Food" size="large"/>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag3" label="Electric" value="Electric" size="large"/>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag4" label="Phone" value="Phone" size="large"/>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag5" label="Book" value="Book" size="large"/>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag6" label="Make up" value="Makeup" size="large"/>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag7" label="Decoration" value="Decoration" size="large"/>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-checkbox v-model="tagModel.tag8" label="Painting" value="Painting" size="large"/>
-                    </el-dropdown-item>
-                  </el-checkbox-group>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
+                   v-if="needSearchPath.includes(route.path)">
+          <div style="display: flex;justify-content: space-between;align-items: center">
+            <div>
+              <div class="search">
+                <el-input v-model="searchBox" style="width: 300px" placeholder="Please input your search" size="large"/>
+                <el-button :icon="Search" size="large" @click="sendParams"/>
+              </div>
+              <div class="tag" v-if="$route.path === '/cusGoods' || $route.path === '/goods'">
+                <el-dropdown :hide-on-click="false" size="large">
+                  <el-button type="primary">
+                    Choose Tag List
+                    <el-icon class="el-icon--right">
+                      <arrow-down/>
+                    </el-icon>
+                  </el-button>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-checkbox-group v-model="chosenTag" :max="3">
+                        <el-dropdown-item>
+                          <el-checkbox v-model="tagModel.tag1" label="Digital" value="Digital" size="large"/>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                          <el-checkbox v-model="tagModel.tag2" label="Food" value="Food" size="large"/>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                          <el-checkbox v-model="tagModel.tag3" label="Electric" value="Electric" size="large"/>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                          <el-checkbox v-model="tagModel.tag4" label="Phone" value="Phone" size="large"/>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                          <el-checkbox v-model="tagModel.tag5" label="Book" value="Book" size="large"/>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                          <el-checkbox v-model="tagModel.tag6" label="Make up" value="Makeup" size="large"/>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                          <el-checkbox v-model="tagModel.tag7" label="Decoration" value="Decoration" size="large"/>
+                        </el-dropdown-item>
+                        <el-dropdown-item>
+                          <el-checkbox v-model="tagModel.tag8" label="Painting" value="Painting" size="large"/>
+                        </el-dropdown-item>
+                      </el-checkbox-group>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+              </div>
+            </div>
+            <div class="user">
+              <span v-if="needSearchPath.slice(0,2).includes(route.path)">User:&nbsp;{{customerStore.customerNickName}}</span>
+              <span v-else>Vendor:&nbsp;{{ vendorStore.businessName }}</span>
+            </div>
           </div>
         </el-header>
         <el-main>
@@ -259,5 +259,12 @@ const needSearchPath = ['/cusGoods','/cusVendors','/goods','/vendors']
   color: var(--el-color-primary);
   display: flex;
   align-items: center;
+}
+
+.user{
+  width: 200px;
+  height: 80px;
+  line-height: 80px;
+  color: red;
 }
 </style>

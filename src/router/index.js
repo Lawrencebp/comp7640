@@ -1,5 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import {useCustomerStore} from "@/stores/index.js";
+import {useCustomerStore,useVendorStore} from "@/stores/index.js";
 import {ElMessage} from "element-plus";
 import App from "@/App.vue";
 import {createApp} from "vue";
@@ -9,6 +9,7 @@ const app = createApp(App)
 app.use(pinia)
 
 const customerStore = useCustomerStore()
+const vendorStore = useVendorStore()
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -18,7 +19,7 @@ const router = createRouter({
         },
         {
             path: '/vendor/index',
-            component: () => import('@/views/customerIndex.vue'),
+            component: () => import('@/views/AllIndex.vue'),
             redirect: '/goods',
             children: [
                 {
@@ -40,7 +41,7 @@ const router = createRouter({
         },
         {
             path: '/customer/index',
-            component: () => import('@/views/customerIndex.vue'),
+            component: () => import('@/views/AllIndex.vue'),
             redirect: '/cusGoods',
             children: [
                 {
@@ -64,16 +65,16 @@ const router = createRouter({
     ]
 })
 
-// router.beforeEach(to => {
-//     if (to.path !== '/'){
-//         if (!customerStore.customerId){
-//             ElMessage.error({
-//                 showClose: true,
-//                 duration:2000,
-//                 message: 'You are not logged in, please login'
-//             })
-//             return '/'
-//         }
-//     }
-// })
+router.beforeEach(to => {
+    if (to.path !== '/'){
+        if (!customerStore.customerId && !vendorStore.vendorId){
+            ElMessage.error({
+                showClose: true,
+                duration:1000,
+                message: 'You are not logged in, please login'
+            })
+            return '/'
+        }
+    }
+})
 export default router
