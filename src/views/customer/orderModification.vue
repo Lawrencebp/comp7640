@@ -71,9 +71,9 @@ const test = value => {
         </div>
       </template>
     </el-table-column>
-    <el-table-column prop="productName" label="Good Name"/>
+    <el-table-column prop="productName" label="Good Name" width="300px"/>
     <el-table-column prop="listedPrice" label="Price"/>
-    <el-table-column prop="amount" label="Number" width="300px">
+    <el-table-column prop="amount" label="Number" width="200px">
       <template #default="scope">
         <el-input-number :min="1" v-if="scope.row.status === '0'" v-model="scope.row.amount" size="small" @change="test(scope.row)"/>
         <el-button type="primary" @click="changeNumber(scope.row)" size="small" v-if="scope.row.status === '0'"
