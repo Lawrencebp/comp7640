@@ -2,9 +2,9 @@ import axios from "axios";
 import { ElLoading } from 'element-plus'
 import {ElMessageBox} from "element-plus";
 
-let baseurl = 'http://111.230.95.185/api'
+let baseurl = 'http://111.230.95.185/api/'
 if (import.meta.env.MODE === 'development'){
-    baseurl = 'localhost:8080'
+    baseurl = 'localhost:8080/'
 }
 console.log(import.meta.env.MODE)
 const options = {

@@ -4,10 +4,11 @@ import {useVendorStore} from "@/stores/index.js";
 import {publishNewGood} from "@/api/vendor/request.js";
 import {ElMessage} from "element-plus";
 import { Plus } from '@element-plus/icons-vue'
+import {URL} from "@/util/axiosConfig.js";
 
 const vendorStore = useVendorStore()
 const newProductForm = ref(null)
-
+const trueUrl = URL + '/file/upload'
 const rules = ref({
   productName: [
     { required: true, message: 'You must type product name', trigger: 'blur' },
@@ -83,7 +84,7 @@ const handleImgSuccess = (response) => {
         <el-upload
           v-model="newProductModel.imgUrl"
           class="avatar-uploader"
-          action="http://111.230.95.185/api/file/upload"
+          :action="trueUrl"
           :show-file-list="false"
           :on-success="handleImgSuccess"
         >
