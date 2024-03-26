@@ -2,6 +2,8 @@ import axios from "axios";
 import { ElLoading } from 'element-plus'
 import {ElMessageBox} from "element-plus";
 
+const baseurl = 'http://111.230.95.185/api'
+
 const options = {
     lock: true,
     text: 'Loading',
@@ -9,7 +11,7 @@ const options = {
 }
 
 const request = axios.create({
-    baseURL: 'http://111.230.95.185/api',
+    baseURL: baseurl,
     timeout: 3000,
 });
 
@@ -42,4 +44,5 @@ request.interceptors.response.use(function (response) {
     return Promise.reject(error);
 });
 
+export const URL = baseurl
 export default request

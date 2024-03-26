@@ -1,7 +1,9 @@
 <script setup>
 import {ref, watch} from "vue";
 import {ArrowDown} from "@element-plus/icons-vue";
+import {URL} from "@/util/axiosConfig.js";
 
+const trueUrl = URL + '/file/upload'
 const emit = defineEmits(['modifyName', 'modifyPrice', 'modifyInventory', 'modifyTag','modifyImg'])
 const prop = defineProps({
   imgUrl: {
@@ -81,7 +83,7 @@ watch(tagList, value => {
         <div>
           <el-upload
               class="upload-demo"
-              action="http://111.230.95.185/api/file/upload"
+              :action="trueUrl"
               :show-file-list="false"
               :on-success="handleImgSuccess"
           >

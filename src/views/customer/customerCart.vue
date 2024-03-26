@@ -1,7 +1,7 @@
 <script setup>
 import eachGood from '@/components/eachGood.vue'
 import {useGoodsStore, useCustomerStore} from "@/stores/index.js";
-import {ref, onMounted} from "vue";
+import {ref, onMounted,computed} from "vue";
 import {payCurrentOrder} from "@/api/customerIndex/request.js";
 import router from "@/router/index.js";
 import {ElMessage} from "element-plus";
@@ -13,6 +13,13 @@ const total = ref(0)
 const page_size = ref(5)
 const currentPage = ref(1)
 
+const totalPrice = computed(() => {
+  return goodsStore.cartList.reduce((prev,item) => {
+    return prev + item.listedPrice * item.number
+  },0)
+})
+
+
 // 分页查询购物车商品
 const pageQueryCartGoods = (current = 1, size = 10) => {
   const {cartList} = goodsStore;
@@ -22,7 +29,7 @@ const pageQueryCartGoods = (current = 1, size = 10) => {
   return {current, size, total, records: cartGoods}
 }
 
-const startPagination = (currentPage,size) => {
+const startPagination = (currentPage, size) => {
   const page = pageQueryCartGoods(currentPage, size)
   finalList.value = page.records
   total.value = page.total
@@ -31,20 +38,20 @@ const startPagination = (currentPage,size) => {
 const delOneGood = delId => {
   finalList.value = finalList.value.filter(item => item.productId !== delId)
   goodsStore.cartList = goodsStore.cartList.filter(item => item.productId !== delId)
-  startPagination(currentPage.value,page_size.value)
+  startPagination(currentPage.value, page_size.value)
   if (finalList.value.length === 0 && currentPage.value > 0) {
-    startPagination(currentPage.value - 1,page_size.value)
+    startPagination(currentPage.value - 1, page_size.value)
   }
 
 }
 
 onMounted(() => {
-  startPagination(currentPage.value,page_size.value)
+  startPagination(currentPage.value, page_size.value)
 })
 
 const handleChange = value => {
   currentPage.value = value
-  startPagination(currentPage.value,page_size.value)
+  startPagination(currentPage.value, page_size.value)
 }
 
 const pay = async () => {
@@ -56,13 +63,13 @@ const pay = async () => {
     }
   })
   const res = await payCurrentOrder(submitData)
-  if (res.code !== 200){
+  if (res.code !== 200) {
     ElMessage({
       message: res.message,
       type: 'error',
-      duration:1000
+      duration: 1000
     })
-  }else {
+  } else {
     ElMessage({
       showClose: true,
       message: 'Pay successfully',
@@ -71,7 +78,7 @@ const pay = async () => {
     })
     setTimeout(() => {
       router.go(0)
-    },1100)
+    }, 1100)
   }
 }
 
@@ -80,7 +87,7 @@ const pay = async () => {
 
 <template>
   <div v-if="finalList.length === 0" class="warning">
-    <el-empty description="You have not goods in your cart" />
+    <el-empty description="You have not goods in your cart"/>
   </div>
   <each-good v-for="item in finalList" :key="item.productId"
              :bname="item.businessName"
@@ -98,9 +105,14 @@ const pay = async () => {
     </template>
   </each-good>
 
-  <el-pagination v-if="finalList.length !== 0" background layout="prev, pager, next" :total="total"
-                 :page-size="page_size" @current-change="handleChange"
-  />
+  <div v-if="finalList.length !== 0" style="display: flex;justify-content: space-between">
+    <el-pagination  background layout="prev, pager, next" :total="total"
+                   :page-size="page_size" @current-change="handleChange"
+    />
+    <div>
+      Total: $ {{ totalPrice }}
+    </div>
+  </div>
   <div class="submit" v-if="finalList.length !== 0">
     <el-button type="primary" round @click="pay">Pay</el-button>
   </div>
